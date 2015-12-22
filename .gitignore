@@ -1,0 +1,6 @@
+.idea/
+*.md
+*.iml
+keytier.js
+*.min.js
+*.min.css
