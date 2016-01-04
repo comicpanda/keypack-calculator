@@ -152,7 +152,7 @@ var KeyPack = React.createClass({
       return (
         <tr>
           <td>{keypack.keyCount}</td>
-          <td className={keypack.originalCoins < keypack.coins
+          <td className={keypack.originalCoins > keypack.coins
             ? 'line-through': ''}>{keypack.originalCoins}</td>
           <td>{keypack.coins}</td>
           <td>
@@ -283,8 +283,8 @@ var KeyPackCalculator = React.createClass({
       remainingKeyCnt = seriesInfo.totalEpisodeCnt - issuedKeyCnt,
       paidKeyCnt = seriesInfo.totalEpisodeCnt - seriesInfo.freeKeyMaxCnt,
       lastKeyTier = this.state.keyTiers.slice(-1)[0],
-      anOriginalKeyPrice = this.state.seriesInfo.pricePerKeyInCoins,
-      aKeyPrice = Math.round(anOriginalKeyPrice / ((100 - lastKeyTier.discount) / 100))
+      realKeyPrice = this.state.seriesInfo.pricePerKeyInCoins,
+      aKeyPrice = Math.round(realKeyPrice / ((100 - lastKeyTier.discount) / 100))
 
     console.log({
       remainingFreeKeyCnt,
@@ -292,7 +292,7 @@ var KeyPackCalculator = React.createClass({
       remainingKeyCnt,
       paidKeyCnt,
       lastKeyTier,
-      anOriginalKeyPrice,
+      realKeyPrice,
       aKeyPrice
     })
 
@@ -312,7 +312,7 @@ var KeyPackCalculator = React.createClass({
         return kt.action !== 'N' && kt.keyCount < remainingKeyCnt
       })
       const tierSize = keyTiers.length
-      let decreasingLimit = Math.ceil(aKeyPrice / anOriginalKeyPrice) + remainingFreeKeyCnt
+      let decreasingLimit = Math.ceil(aKeyPrice / realKeyPrice) + remainingFreeKeyCnt
 
       if (tierSize > 0) {
         var firstKeyTier = tierSize > 1 ? keyTiers[0] : {keyCount : 0}
@@ -327,7 +327,7 @@ var KeyPackCalculator = React.createClass({
               id            : ckt.id,
               keyCount      : ckt.keyCount,
               originalCoins : ckt.keyCount * aKeyPrice,
-              coins         : ckt.keyCount * anOriginalKeyPrice
+              coins         : ckt.keyCount * (ckt.discount === 0 ? aKeyPrice :aKeyPrice -  Math.round(aKeyPrice * (ckt.discount / 100)))
             })
           }
         })
@@ -338,7 +338,7 @@ var KeyPackCalculator = React.createClass({
         keyCount      : remainingKeyCnt,
         originalCoins : (decreasingLimit < remainingKeyCnt ? remainingKeyCnt : decreasingLimit) * aKeyPrice,
         coins         : ((decreasingLimit < remainingKeyCnt ? remainingKeyCnt : decreasingLimit) -
-        remainingFreeKeyCnt) * anOriginalKeyPrice
+        remainingFreeKeyCnt) * realKeyPrice
       })
 
       return candidateKeypacks
@@ -353,7 +353,7 @@ var KeyPackCalculator = React.createClass({
             <input type="number" onChange={this.onChangeCoinPerDollars} value={this.state.coinPerDollars}/>
             <h3>Series Info
               &nbsp;
-              <small>(keyPack 1 - {aKeyPrice} coins. Real value : {anOriginalKeyPrice} coins). Paid Key Count : {paidKeyCnt} </small>
+              <small>(keyPack 1 - {aKeyPrice} coins. Real value : {realKeyPrice} coins). Paid Key Count : {paidKeyCnt} </small>
             </h3>
             <SeriesInfo info={seriesInfo} onChange={this.setSeriesInfo}/>
             <h3>KeyTiers</h3>
