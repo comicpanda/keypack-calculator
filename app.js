@@ -9,7 +9,7 @@ var discountRate = function (a, b) {
 }
 
 var UserInfo = React.createClass({
-  render : function () {
+  render: function () {
     return (
       <table className="table table-bordered">
         <thead>
@@ -30,24 +30,24 @@ var UserInfo = React.createClass({
 })
 
 var KeyTiers = React.createClass({
-  getInitialState : function () {
+  getInitialState: function () {
     return {
-      keyCount : 0,
-      discount : 0
+      keyCount: 0,
+      discount: 0
     }
   },
 
-  onChange : function () {
+  onChange: function () {
     this.updateState(this.refs.keycnt.value, this.refs.discount.value)
   },
 
-  updateState : function (keyCount, discount) {
+  updateState: function (keyCount, discount) {
     keyCount = toInt(keyCount)
     discount = Math.min(Math.max(toInt(discount), 0), 100)
     this.setState({keyCount, discount})
   },
 
-  render : function () {
+  render: function () {
     var createItem = function (item) {
       return (<tr key={item.id}>
         <td>{item.keyCount}</td>
@@ -97,21 +97,21 @@ var KeyTiers = React.createClass({
 })
 
 var SeriesInfo = React.createClass({
-  onChange : function () {
-    const totalEpisodeCnt = Math.max(this.refs.episodes.value, 0),
-      freeKeyMaxCnt = Math.min(totalEpisodeCnt, Math.max(this.refs.freekey.value, 0)),
-      freeEpisodeKeyCnt = Math.min(freeKeyMaxCnt, Math.max(this.refs.freeepisode.value, 0)),
-      pricePerKeyInCoins = this.refs.perkey.value;
+  onChange: function () {
+    const totalEpisodeCnt    = Math.max(this.refs.episodes.value, 0),
+          freeKeyMaxCnt      = Math.min(totalEpisodeCnt, Math.max(this.refs.freekey.value, 0)),
+          freeEpisodeKeyCnt  = Math.min(freeKeyMaxCnt, Math.max(this.refs.freeepisode.value, 0)),
+          pricePerKeyInCoins = this.refs.perkey.value;
 
     this.props.onChange({
-      totalEpisodeCnt    : toInt(totalEpisodeCnt),
-      freeKeyMaxCnt      : toInt(freeKeyMaxCnt),
-      freeEpisodeKeyCnt  : toInt(freeEpisodeKeyCnt),
-      pricePerKeyInCoins : toInt(pricePerKeyInCoins)
+      totalEpisodeCnt   : toInt(totalEpisodeCnt),
+      freeKeyMaxCnt     : toInt(freeKeyMaxCnt),
+      freeEpisodeKeyCnt : toInt(freeEpisodeKeyCnt),
+      pricePerKeyInCoins: toInt(pricePerKeyInCoins)
     })
   },
 
-  render : function () {
+  render: function () {
     const info = this.props.info
     return (
       <table className="table table-bordered">
@@ -147,7 +147,7 @@ var SeriesInfo = React.createClass({
 })
 
 var KeyPack = React.createClass({
-  render : function () {
+  render: function () {
     var createKeypack = function (keypack) {
       return (
         <tr>
@@ -156,7 +156,9 @@ var KeyPack = React.createClass({
             ? 'line-through': ''}>{keypack.originalCoins}</td>
           <td>{keypack.coins}</td>
           <td>
-            <button type="button" className="btn btn-sm btn-primary" onClick={() => { this.props.buy(this.props.keypacks,keypack.id)}}>Buy</button>
+            <button type="button" className="btn btn-sm btn-primary"
+                    onClick={() => { this.props.buy(this.props.keypacks,keypack.id)}}>Buy
+            </button>
           </td>
         </tr>
       )
@@ -191,51 +193,55 @@ var FreeKey = React.createClass({
 })
 
 var KeyPackCalculator = React.createClass({
-  getInitialState : function () {
+  getInitialState: function () {
     var state = {
-      coinPerDollars : 1000,
-      keyTiers       : [
-        {action : 'N', keyCount : 1, id : 1, discount : 0},
-        {action : 'A', keyCount : 5, id : 2, discount : 0},
-        {action : 'A', keyCount : 10, id : 3, discount : 5},
-        {action : 'A', keyCount : 20, id : 4, discount : 10}
+      coinPerDollars: 1000,
+      keyTiers      : [
+        {action: 'N', keyCount: 1, id: 1, discount: 0},
+        {action: 'A', keyCount: 5, id: 2, discount: 0},
+        {action: 'A', keyCount: 10, id: 3, discount: 5},
+        {action: 'A', keyCount: 20, id: 4, discount: 10}
       ],
-      seriesInfo     : {totalEpisodeCnt : 50, freeKeyMaxCnt : 10, freeEpisodeKeyCnt : 3, pricePerKeyInCoins : 250},
-      userInfo       : {earnedFreeKeyCnt : 0, purchasedKeyCnt : 0, spentCoins : 0},
-      purchasedLogs  : []
+      seriesInfo    : {totalEpisodeCnt: 50, freeKeyMaxCnt: 10, freeEpisodeKeyCnt: 3, pricePerKeyInCoins: 250},
+      userInfo      : {earnedFreeKeyCnt: 0, purchasedKeyCnt: 0, spentCoins: 0},
+      purchasedLogs : []
     }
     state.userInfo.earnedFreeKeyCnt = state.seriesInfo.freeEpisodeKeyCnt
     return state
   },
 
-  setSeriesInfo : function (newInfo) {
+  setSeriesInfo: function (newInfo) {
     this.setState({
-      seriesInfo : newInfo,
-      userInfo   : {
-        earnedFreeKeyCnt : this.state.userInfo.earnedFreeKeyCnt +
+      seriesInfo: newInfo,
+      userInfo  : {
+        earnedFreeKeyCnt: this.state.userInfo.earnedFreeKeyCnt +
         (newInfo.freeEpisodeKeyCnt - this.state.seriesInfo.freeEpisodeKeyCnt),
-        purchasedKeyCnt  : this.state.userInfo.purchasedKeyCnt,
-        spentCoins       : this.state.userInfo.spentCoins
+        purchasedKeyCnt : this.state.userInfo.purchasedKeyCnt,
+        spentCoins      : this.state.userInfo.spentCoins
       }
     })
   },
 
   onChangeCoinPerDollars(e) {
-    this.setState({coinPerDollars : e.target.value})
+    this.setState({coinPerDollars: e.target.value})
   },
 
   deleteKeyTier(deletedKeyTier) {
     this.setState(
-      {keyTiers : this.state.keyTiers.filter(function (keyTier) { return keyTier.id !== deletedKeyTier.id})})
+      {
+        keyTiers: this.state.keyTiers.filter(function (keyTier) {
+          return keyTier.id !== deletedKeyTier.id
+        })
+      })
   },
 
   addKeyTier(keyCount, discount) {
     var keyTiers = this.state.keyTiers
     keyTiers.push({
-      action   : 'A',
-      keyCount : keyCount,
-      discount : discount,
-      id       : Date.now()
+      action  : 'A',
+      keyCount: keyCount,
+      discount: discount,
+      id      : Date.now()
     })
     keyTiers.sort(function (a, b) {
       return toInt(a.keyCount) - toInt(b.keyCount)
@@ -258,33 +264,33 @@ var KeyPackCalculator = React.createClass({
     var purchasedLogs = [` ${this.state.purchasedLogs.length + 1}: ${keyPack.keyCount} keys - ${keyPack.coins} coins`]
     purchasedLogs.push(...this.state.purchasedLogs)
     this.setState({
-      userInfo : {
-        earnedFreeKeyCnt : this.state.userInfo.earnedFreeKeyCnt + earnedFreeKeyCnt,
-        purchasedKeyCnt  : this.state.userInfo.purchasedKeyCnt + purchasedKeyCnt,
-        spentCoins       : this.state.userInfo.spentCoins + keyPack.coins
+      userInfo: {
+        earnedFreeKeyCnt: this.state.userInfo.earnedFreeKeyCnt + earnedFreeKeyCnt,
+        purchasedKeyCnt : this.state.userInfo.purchasedKeyCnt + purchasedKeyCnt,
+        spentCoins      : this.state.userInfo.spentCoins + keyPack.coins
       }, purchasedLogs
     })
   },
 
   earnedFreeKey() {
     this.setState({
-      userInfo : {
-        earnedFreeKeyCnt : this.state.userInfo.earnedFreeKeyCnt + 1,
-        purchasedKeyCnt  : this.state.userInfo.purchasedKeyCnt
+      userInfo: {
+        earnedFreeKeyCnt: this.state.userInfo.earnedFreeKeyCnt + 1,
+        purchasedKeyCnt : this.state.userInfo.purchasedKeyCnt
       }
     })
   },
 
-  render : function () {
-    var userInfo = this.state.userInfo,
-      seriesInfo = this.state.seriesInfo,
-      remainingFreeKeyCnt = Math.max(seriesInfo.freeKeyMaxCnt - userInfo.earnedFreeKeyCnt, 0),
-      issuedKeyCnt = userInfo.purchasedKeyCnt + userInfo.earnedFreeKeyCnt,
-      remainingKeyCnt = seriesInfo.totalEpisodeCnt - issuedKeyCnt,
-      paidKeyCnt = seriesInfo.totalEpisodeCnt - seriesInfo.freeKeyMaxCnt,
-      lastKeyTier = this.state.keyTiers.slice(-1)[0],
-      realKeyPrice = this.state.seriesInfo.pricePerKeyInCoins,
-      aKeyPrice = Math.round(realKeyPrice / ((100 - lastKeyTier.discount) / 100))
+  render: function () {
+    var userInfo            = this.state.userInfo,
+        seriesInfo          = this.state.seriesInfo,
+        remainingFreeKeyCnt = Math.max(seriesInfo.freeKeyMaxCnt - userInfo.earnedFreeKeyCnt, 0),
+        issuedKeyCnt        = userInfo.purchasedKeyCnt + userInfo.earnedFreeKeyCnt,
+        remainingKeyCnt     = seriesInfo.totalEpisodeCnt - issuedKeyCnt,
+        paidKeyCnt          = seriesInfo.totalEpisodeCnt - seriesInfo.freeKeyMaxCnt,
+        lastKeyTier         = this.state.keyTiers.slice(-1)[0],
+        realKeyPrice        = this.state.seriesInfo.pricePerKeyInCoins,
+        aKeyPrice           = Math.round(realKeyPrice / ((100 - lastKeyTier.discount) / 100))
 
     console.log({
       remainingFreeKeyCnt,
@@ -301,7 +307,7 @@ var KeyPackCalculator = React.createClass({
         return []
       }
       var candidateKeypacks = [{
-        id : 1, keyCount : 1, originalCoins : aKeyPrice, coins : aKeyPrice
+        id: 1, keyCount: 1, originalCoins: aKeyPrice, coins: aKeyPrice
       }]
 
       if (remainingKeyCnt === 1) {
@@ -315,7 +321,7 @@ var KeyPackCalculator = React.createClass({
       let decreasingLimit = Math.ceil(aKeyPrice / realKeyPrice) + remainingFreeKeyCnt
 
       if (tierSize > 0) {
-        var firstKeyTier = tierSize > 1 ? keyTiers[0] : {keyCount : 0}
+        var firstKeyTier = tierSize > 1 ? keyTiers[0] : {keyCount: 0}
 
         var candidateKeyTiers = keyTiers.filter(function (kt) {
           return remainingKeyCnt >= firstKeyTier.keyCount + kt.keyCount
@@ -324,20 +330,20 @@ var KeyPackCalculator = React.createClass({
         candidateKeyTiers.map(function (ckt) {
           if (remainingKeyCnt - ckt.keyCount >= decreasingLimit) {
             candidateKeypacks.push({
-              id            : ckt.id,
-              keyCount      : ckt.keyCount,
-              originalCoins : ckt.keyCount * aKeyPrice,
-              coins         : ckt.keyCount * (ckt.discount === 0 ? aKeyPrice :aKeyPrice -  Math.round(aKeyPrice * (ckt.discount / 100)))
+              id           : ckt.id,
+              keyCount     : ckt.keyCount,
+              originalCoins: ckt.keyCount * aKeyPrice,
+              coins        : ckt.keyCount * (ckt.discount === 0 ? aKeyPrice : aKeyPrice - Math.round(aKeyPrice * (ckt.discount / 100)))
             })
           }
         })
       }
 
       candidateKeypacks.push({
-        id            : 0,
-        keyCount      : remainingKeyCnt,
-        originalCoins : (decreasingLimit < remainingKeyCnt ? remainingKeyCnt : decreasingLimit) * aKeyPrice,
-        coins         : ((decreasingLimit < remainingKeyCnt ? remainingKeyCnt : decreasingLimit) -
+        id           : 0,
+        keyCount     : remainingKeyCnt,
+        originalCoins: (decreasingLimit < remainingKeyCnt ? remainingKeyCnt : decreasingLimit) * aKeyPrice,
+        coins        : ((decreasingLimit < remainingKeyCnt ? remainingKeyCnt : decreasingLimit) -
         remainingFreeKeyCnt) * realKeyPrice
       })
 
@@ -353,7 +359,8 @@ var KeyPackCalculator = React.createClass({
             <input type="number" onChange={this.onChangeCoinPerDollars} value={this.state.coinPerDollars}/>
             <h3>Series Info
               &nbsp;
-              <small>(keyPack 1 - {aKeyPrice} coins. Real value : {realKeyPrice} coins). Paid Key Count : {paidKeyCnt} </small>
+              <small>(keyPack 1 - {aKeyPrice} coins. Real value : {realKeyPrice} coins). Paid Key Count
+                : {paidKeyCnt} </small>
             </h3>
             <SeriesInfo info={seriesInfo} onChange={this.setSeriesInfo}/>
             <h3>KeyTiers</h3>
