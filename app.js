@@ -342,7 +342,7 @@ var KeyPackCalculator = React.createClass({
       candidateKeypacks.push({
         id           : 0,
         keyCount     : remainingKeyCnt,
-        originalCoins: (decreasingLimit < remainingKeyCnt ? remainingKeyCnt : decreasingLimit) * aKeyPrice,
+        originalCoins: remainingKeyCnt * aKeyPrice,
         coins        : ((decreasingLimit < remainingKeyCnt ? remainingKeyCnt : decreasingLimit) -
         remainingFreeKeyCnt) * realKeyPrice
       })
