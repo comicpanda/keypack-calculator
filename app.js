@@ -168,7 +168,7 @@ var KeyPack = React.createClass({
         <thead>
         <td>Keypack</td>
         <td>Retail Price</td>
-        <td>Base Price</td>
+        <td>Selling Price</td>
         <td>buy</td>
         </thead>
         <tbody>
