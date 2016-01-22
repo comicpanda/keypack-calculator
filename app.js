@@ -14,7 +14,7 @@ var UserInfo = React.createClass({
       <table className="table table-bordered">
         <thead>
         <td>Purchased Key Count</td>
-        <td>Earned Free Key Count</td>
+        <td>Iussed Free Key Count</td>
         </thead>
         <tr>
           <td>
@@ -167,8 +167,8 @@ var KeyPack = React.createClass({
       <table className="table table-bordered">
         <thead>
         <td>Keypack</td>
-        <td>Original Coins</td>
-        <td>Coins</td>
+        <td>Retail Price</td>
+        <td>Base Price</td>
         <td>buy</td>
         </thead>
         <tbody>
@@ -323,10 +323,9 @@ var KeyPackCalculator = React.createClass({
 
         var firstCnt = keyTiers[0].keyCount
         keyTiers.map(function (ckt) {
+        firstCnt = keyTiers[0].keyCount === ckt.keyCount ? 1 : firstCnt
           if (remainingKeyCnt > ckt.keyCount + firstCnt &&
               remainingKeyCnt-remainingFreeKeyCnt > ckt.keyCount) {
-
-
             candidateKeypacks.push({
               id           : ckt.id,
               keyCount     : ckt.keyCount,
@@ -356,7 +355,7 @@ var KeyPackCalculator = React.createClass({
             <input type="number" onChange={this.onChangeCoinPerDollars} value={this.state.coinPerDollars}/>
             <h3>Series Info
               &nbsp;
-              <small>(keyPack 1 - {aKeyPrice} coins. Real value : {realKeyPrice} coins). Paid Key Count
+              <small>(RetailKeyPrice 1 - {aKeyPrice} coins.  BaseKeyPrice : {realKeyPrice} coins). Base Key Count
                 : {paidKeyCnt} </small>
             </h3>
             <SeriesInfo info={seriesInfo} onChange={this.setSeriesInfo}/>
@@ -369,7 +368,7 @@ var KeyPackCalculator = React.createClass({
             <UserInfo info={userInfo}/>
           </div>
           <div className="dp">
-            <h4>Remaining Keys - including freeKey : {remainingKeyCnt} / excluding freeKey : {Math.max(remainingKeyCnt -
+            <h4>RemainingKeys : {remainingKeyCnt} / RemainingBaseKeys : {Math.max(remainingKeyCnt -
               remainingFreeKeyCnt, 0)}</h4>
             <h3>KeyPack</h3>
             <KeyPack keypacks={keypacks} buy={this.buy}/>
