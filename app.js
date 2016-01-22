@@ -318,17 +318,15 @@ var KeyPackCalculator = React.createClass({
         return kt.action !== 'N' && kt.keyCount < remainingKeyCnt
       })
       const tierSize = keyTiers.length
-      let decreasingLimit = Math.ceil(aKeyPrice / realKeyPrice) + remainingFreeKeyCnt
 
       if (tierSize > 0) {
-        var firstKeyTier = tierSize > 1 ? keyTiers[0] : {keyCount: 0}
 
-        var candidateKeyTiers = keyTiers.filter(function (kt) {
-          return remainingKeyCnt >= firstKeyTier.keyCount + kt.keyCount
-        })
+        var firstCnt = keyTiers[0].keyCount
+        keyTiers.map(function (ckt) {
+          if (remainingKeyCnt > ckt.keyCount + firstCnt &&
+              remainingKeyCnt-remainingFreeKeyCnt > ckt.keyCount) {
 
-        candidateKeyTiers.map(function (ckt) {
-          if (remainingKeyCnt - ckt.keyCount >= decreasingLimit) {
+
             candidateKeypacks.push({
               id           : ckt.id,
               keyCount     : ckt.keyCount,
@@ -343,8 +341,7 @@ var KeyPackCalculator = React.createClass({
         id           : 0,
         keyCount     : remainingKeyCnt,
         originalCoins: remainingKeyCnt * aKeyPrice,
-        coins        : ((decreasingLimit < remainingKeyCnt ? remainingKeyCnt : decreasingLimit) -
-        remainingFreeKeyCnt) * realKeyPrice
+        coins        : Math.max(remainingKeyCnt-remainingFreeKeyCnt, 2) * realKeyPrice
       })
 
       return candidateKeypacks
