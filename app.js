@@ -152,7 +152,7 @@ var KeyPack = React.createClass({
         <tbody>
         {this.props.keypacks.length > 0 ? this.props.keypacks.map(createKeypack.bind(this, this.props.coinPerDollars)) :
           <tr className="center">
-            <td colSpan="4">No more..</td>
+            <td colSpan="4">None</td>
           </tr>}
         </tbody>
       </table>
